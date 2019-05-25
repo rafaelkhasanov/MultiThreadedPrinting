@@ -11,21 +11,23 @@ namespace MultiThreadedPrinting
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Synchronizing Threads\n");
+            Console.WriteLine("Fun with the CLR Thread Pool\n");
+            Console.WriteLine($"Main thread started. ThreadID = {Thread.CurrentThread.ManagedThreadId}");
             Printer p = new Printer();
-            //Создать 10 потоков, которые указывают на один и тот же метод того же самого объекта
-            Thread[] threads = new Thread[10];
+            WaitCallback workItem = new WaitCallback(PrintTheNumbers);
+            //Поставить в очередь метод десять раз.
             for (int i = 0; i < 10; i++)
             {
-                threads[i] = new Thread(new ThreadStart(p.PrintNumbers))
-                {
-                    Name = $"Worker thread #{i}"
-                };
+                ThreadPool.QueueUserWorkItem(workItem, p);
             }
 
-            foreach (Thread item in threads)
-                item.Start();
+            Console.WriteLine("All tasks queued");
             Console.ReadLine();
+        }
+        static void PrintTheNumbers(object state)
+        {
+            Printer task = (Printer)state;
+            task.PrintNumbers();
         }
     }
 }

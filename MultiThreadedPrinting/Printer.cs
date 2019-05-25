@@ -15,14 +15,14 @@ namespace MultiThreadedPrinting
             lock (threadLock)
             {
                 //Вывести информацию о потоке
-                Console.WriteLine($"->{Thread.CurrentThread.Name} is executing PrintNumbers()");
+                Console.WriteLine($"-{Thread.CurrentThread.ManagedThreadId} is executing PrintNumbers()");
                 //Вывести числа
                 Console.Write("Your numbers: ");
                 for (int i = 0; i < 10; i++)
                 {
                     //Приостановить поток на случайный период времени
                     Random r = new Random();
-                    Thread.Sleep(100 * r.Next(5));
+                    Thread.Sleep(500 * r.Next(5));
 
                     Console.Write($"{i}, ");
                 }
